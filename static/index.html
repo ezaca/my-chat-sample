@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Democracia - Wylars</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.min.js" integrity="sha512-Pdnl+dKWHA0jEnmhogUHlOw3FqDeujiEc3XQDkvMrPUAvytiU2cZiknw2xDPgDS+u2prg2n+6eKz3CPG588gTQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js" integrity="sha512-HTENHrkQ/P0NGDFd5nk6ibVtCkcM7jhr2c7GyvXp5O+4X6O5cQO9AhqFzM+MdeBivsX7Hoys2J7pp2wdgMpCvw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js" integrity="sha512-i9cEfJwUwViEPFKdC1enz4ZRGBj8YQo6QByFTF92YXHi7waCqyexvRD75S5NVTsSiTv7rKWqG9Y5eFxmRsOn0A==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+	<script src="require.js" defer></script>
+	<script src="shared/easycrypto.js" defer></script>
+	<script src="shared/peer.js" defer></script>
+	<script src="app.js" defer></script>
+	<style>
+		.blue{ color: blue; }
+		.red{ color: red; }
+	</style>
+</head>
+<body>
+	<div id="app">
+		<form @submit.prevent="sendIdentify">
+			<input type="text" v-model="inputs.name" />
+			<button type="submit">Identificar</button>
+		</form>
+
+		<ul>
+			<li v-for="msg in messages" :class="{blue:msg.me,red:msg.sys}">
+				<span v-if="msg.sys">{{ msg.sys }} {{ msg.m }}</span>
+				<span v-else>{{ msg.n }} [{{msg.t}}]: {{ msg.m }}</span>
+			</li>
+		</ul>
+
+		<form @submit.prevent="sendMsg">
+			<input type="text" v-model="inputs.msg" />
+			<button type="submit">Enviar</button>
+		</form>
+	</div>
+</body>
+</html>

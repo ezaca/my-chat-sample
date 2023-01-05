@@ -1,3 +1,9 @@
+# Visual Studio
+*.njsproj
+*.njsproj.user
+.vs
+*.suo
+
 # Logs
 logs
 *.log

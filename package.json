@@ -1,0 +1,12 @@
+{
+  "name": "wylars",
+  "version": "0.0.0",
+  "description": "Wylars",
+  "main": "server.js",
+  "author": {
+    "name": ""
+  },
+  "dependencies": {
+    "socket.io": "^4.5.4"
+  }
+}
