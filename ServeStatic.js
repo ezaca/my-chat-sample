@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 
 exports.ServeStatic = function (req, res) {
-    if (req.method !== "GET")
+    if ((req.method !== "GET") || (req.method !== "OPTIONS"))
         return console.log('Unhandled', req.method, req.url);
 
     const filename = __dirname + "/static/" + (req.url.replace(/[^a-z.]/, '') || "index.html");
