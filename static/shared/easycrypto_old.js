@@ -1,3 +1,4 @@
+// easy crypto
 const easyCryptoMethods = (function () {
     const crypto = require('node:crypto').webcrypto;
     const algorithm = { name: "RSA-OAEP", hash: "SHA-256" };
