@@ -15,26 +15,127 @@
 	<style>
 		.blue{ color: blue; }
 		.red{ color: red; }
+		html{
+			overflow: hidden;
+			margin: 0;
+			padding: 0;
+			height: 100vh;
+			width: 100%;
+		}
+		body{
+			margin:0;
+			padding:0;
+			height: 100%;
+			width: 100%;
+		}
+		.init-note{ display: none; }
+		.uninitialized > *{ display: none; }
+		.uninitialized > .init-note{ display: block; }
+		.delay-4s{
+			animation: delay 4s;
+		}
+		@keyframes delay{
+			from{ opacity: 0; }
+			99%{ opacity: 0; }
+			to{ opacity: 1; }
+		}
+		.chat-bubble{
+			max-width: 50ex;
+			margin: 0.25rem;
+			padding: 0.5rem;
+		}
+		.chat-bubble.me{
+			margin-left: 14ex;
+		}
 	</style>
 </head>
 <body>
-	<div id="app">
-		<form @submit.prevent="sendIdentify">
-			<input type="text" v-model="inputs.name" />
-			<button type="submit">Identificar</button>
-		</form>
+	<div id="app" class="uninitialized d-flex flex-column h-100">
 
-		<ul>
-			<li v-for="msg in messages" :class="{blue:msg.me,red:msg.sys}">
-				<span v-if="msg.sys">{{ msg.sys }} {{ msg.m }}</span>
-				<span v-else>{{ msg.n }} [{{msg.t}}]: {{ msg.m }}</span>
-			</li>
-		</ul>
+		<!-- Vue not mounted -->
 
-		<form @submit.prevent="sendMsg">
-			<input type="text" v-model="inputs.msg" />
-			<button type="submit">Enviar</button>
-		</form>
+		<div class="alert init-note">
+			Carregando...
+			<div class="pt-3 delay-4s">Está demorando um pouco. Atualizar a página pode ajudar.</div>
+			<pre class="pt-3" id="errorsPreVue"></pre>
+		</div>
+
+		<!-- Vue mounted -->
+
+		<header class="bg-primary text-white p-2">
+			<h1 class="small m-0 p-0">Wylars</h1>
+		</header>
+
+		<div class="alert alert-danger" v-if="errors.length">
+			<div v-for="error in errors">
+				<strong>{{error.message}} at {{ error.url }}:{{ error.line }}:{{ error.col }}</strong>
+			</div>
+			<a class="text-danger" href="" @click.prevent="errors = []">Limpar errors</a>
+		</div>
+
+		<!-- Mounted, but not ready yet -->
+		<section v-if="!connected || !ready">
+			<div class="alert">Iniciando conexão...</div>
+			<div class="alert" v-if="connected">Conectado, trocando figurinhas...</div>
+			<div class="alert" v-if="ready">Conectado e pronto.</div>
+		</section>
+
+		<!-- Ready, but not participating -->
+		<section v-if="connected && ready && !participating">
+			<form class="form p-3 m-3" @submit.prevent="sendIdentify">
+				<div class="input-group">
+					<input class="form-control" type="text" placeholder="Digite um apelido reconhecível e discreto" v-model="inputs.name" />
+					<button class="btn btn-primary" type="submit">Entrar</button>
+				</div>
+			</form>
+		</section>
+
+		<!-- Participating -->
+		<section v-if="connected && ready && participating" class="m-3 d-flex flex-column flex-grow-1">
+			<div class="small">
+				Participam:
+				<span v-for="[id, peer] in peers" :class="{badge:true, 'bg-warning':peer.me, 'bg-secondary':!peer.me}">{{ peer.name }}</span>
+				<hr />
+			</div>
+
+            <div class="flex-grow-1">
+				<div v-for="msg in messages">
+					<div v-if="msg.sys" class="small chat-bubble text-secondary">
+						{{ msg.m }}
+						<span v-if="msg.sys === 'add peer'">acabou de entrar.</span>
+						<span v-if="msg.sys === 'remove peer'">saiu.</span>
+					</div>
+
+					<div v-else-if="msg.me" class="bg-primary text-white rounded chat-bubble me">
+						{{ msg.m }}
+						<footer style="font-size: .7em" class="small text-gray text-end">{{ msg.tf }}</footer>
+					</div>
+
+					<div v-else class="bg-light rounded chat-bubble">
+						{{ msg.m }}
+						<footer style="font-size: .7em" class="small text-gray text-end">{{ msg.n }} - {{ msg.tf }}</footer>
+					</div>
+				</div>
+            </div>
+
+			<form class="form" @submit.prevent="sendMsg">
+				<div class="input-group">
+					<input class="form-control" placeholder="Digite a mensagem e clique em enviar" type="text" v-model="inputs.msg" />
+					<button class="btn btn-primary" type="submit">Enviar</button>
+				</div>
+			</form>
+		</section>
 	</div>
+	<script>
+		/**
+		 * @param {Error} error
+		 */
+		function addErrorsPreVue(message, url, line, col) {
+			const s = `${message}\n  at ${url}:${line}:${col}\n\n`;
+            document.getElementById('errorsPreVue').innerText += s;
+        }
+
+        window.onerror = addErrorsPreVue;
+	</script>
 </body>
 </html>

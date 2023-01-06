@@ -12,7 +12,6 @@ exports.ServeStatic = function (req, res) {
             res.end("Access deined or file not found");
             return;
         }
-
         let contentType = 'text/html';
         if (filename.endsWith('.css'))
             contentType = 'text/css';
