@@ -2,7 +2,7 @@ console.log("Application loaded...");
 const http = require('http');
 const socketIo = require('socket.io');
 const { HandleSocket } = require("./HandleSocket");
-const { EasyCrypto } = require("./static/shared/EasyCrypto");
+const { EasyCrypto } = require("./static/shared/easycrypto");
 const ServeStatic = require('./ServeStatic').ServeStatic;
 const port = process.env.PORT || 8080;
 
