@@ -26,7 +26,7 @@
                 peers: new Map(),
                 messages: [],
                 inputs: {
-                    name: 'Apelido discreto',
+                    name: '',
                     msg: '',
                 }
             }
