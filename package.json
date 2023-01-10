@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "Wylars",
   "main": "server.js",
+  "scripts": {
+    "start": "node server"
+  },
   "author": {
     "name": ""
   },
